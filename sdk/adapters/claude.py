@@ -1,5 +1,6 @@
 import time
 from sdk.logger import log_event
+
 PRICING = {
     "claude-haiku-4-5":   {"input": 1.00,  "output": 5.00},
     "claude-sonnet-4-6":  {"input": 3.00,  "output": 15.00},
@@ -20,7 +21,7 @@ class MessagesNamespace:
         start = time.time()
 
         response = self._client.messages.create(
-            **kwargs                               
+            **kwargs  
         )
         model = kwargs.get("model")
         latency_ms = (time.time() - start) * 1000
