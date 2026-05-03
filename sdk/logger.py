@@ -1,6 +1,7 @@
 import json
 from datetime import datetime, timezone
 from pathlib import Path
+from pipeline.producer import push
 
 LOG_FILE = Path("events.jsonl")
 
@@ -16,3 +17,4 @@ def log_event(model, provider, input_tokens, output_tokens, latency_ms, cost):
     }
     with LOG_FILE.open("a") as f:
         f.write(json.dumps(event) + "\n")
+    push(event)
