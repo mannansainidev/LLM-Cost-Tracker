@@ -1,4 +1,5 @@
 import time
+from sdk.logger import log_event
 
 PRICING = {
     "gemini-2.5-flash-lite": {"input": 0.10, "output": 0.40,  "input_long": 0.10,  "output_long": 0.40},
@@ -35,10 +36,13 @@ class ModelsNamespace:
             (output_tokens / 1_000_000) * prices[tier.replace("input", "output")]
         )
 
-        print("model:", model)
-        print("latency:", round(latency_ms), "ms")
-        print("input tokens:", input_tokens)
-        print("output tokens:", output_tokens)
-        print(f"cost: ${round(cost, 6)}")
+        log_event(
+            model=model,
+            provider="gemini",      
+            input_tokens=response.usage.input_tokens,
+            output_tokens=response.usage.output_tokens,
+            latency_ms=latency_ms,
+            cost=cost,
+        )
 
         return response

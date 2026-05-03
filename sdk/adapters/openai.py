@@ -1,4 +1,5 @@
 import time
+from sdk.logger import log_event
 
 # cost per 1M tokens (update as pricing changes)
 PRICING = {
@@ -38,15 +39,13 @@ class CompletionsNamespace:
         )
         
         # build the event log
-        event = {
-            "model":             model,
-            "input_tokens":      usage.prompt_tokens,
-            "output_tokens":     usage.completion_tokens,
-            "latency_ms":        round(latency_ms, 2),
-            "cost_usd":          round(cost, 6),
-            "prompt_preview":    str(kwargs.get("messages", ""))[:100],
-        }
-        
-        print(f"[LOG] {event}")
+        log_event(
+            model=model,
+            provider="openai",      
+            input_tokens=response.usage.input_tokens,
+            output_tokens=response.usage.output_tokens,
+            latency_ms=latency_ms,
+            cost=cost,
+        )
         
         return response  # original response untouched

@@ -1,5 +1,5 @@
 import time
-import sdk.logger
+from sdk.logger import log_event
 PRICING = {
     "claude-haiku-4-5":   {"input": 1.00,  "output": 5.00},
     "claude-sonnet-4-6":  {"input": 3.00,  "output": 15.00},
@@ -30,5 +30,12 @@ class MessagesNamespace:
             (response.usage.output_tokens / 1_000_000) * prices["output"]
         )
         
-
+        log_event(
+            model=model,
+            provider="claude",      
+            input_tokens=response.usage.input_tokens,
+            output_tokens=response.usage.output_tokens,
+            latency_ms=latency_ms,
+            cost=cost,
+        )
         return response
