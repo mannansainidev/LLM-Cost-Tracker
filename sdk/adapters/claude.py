@@ -1,4 +1,11 @@
 import time
+import sdk.logger
+PRICING = {
+    "claude-haiku-4-5":   {"input": 1.00,  "output": 5.00},
+    "claude-sonnet-4-6":  {"input": 3.00,  "output": 15.00},
+    "claude-opus-4-6":    {"input": 5.00,  "output": 25.00},
+    "claude-opus-4-7":    {"input": 5.00,  "output": 25.00},
+}
 
 class ClaudeAdapter:
     def __init__(self, client):
@@ -15,12 +22,13 @@ class MessagesNamespace:
         response = self._client.messages.create(
             **kwargs                               
         )
-
+        model = kwargs.get("model")
         latency_ms = (time.time() - start) * 1000
-
-        print("model:", kwargs.get("model"))
-        print("latency:", round(latency_ms), "ms")
-        print("input tokens:", response.usage.input_tokens)    
-        print("output tokens:", response.usage.output_tokens)  
+        prices = PRICING.get(model, {"input": 0, "output": 0})
+        cost = (
+            (response.usage.input_tokens  / 1_000_000) * prices["input"] +
+            (response.usage.output_tokens / 1_000_000) * prices["output"]
+        )
+        
 
         return response
