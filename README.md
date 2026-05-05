@@ -1,3 +1,6 @@
+
+## warning : Readme is fully ai but the code isn't
+
 # 🚀 LLM Cost Tracker
 
 Welcome! This is a simple tool to track how much money you're spending on AI stuff.
